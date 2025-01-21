@@ -46,23 +46,6 @@ The orchestration layer manages cross-domain interactions through events. It inc
 ./gradlew buildAllHandlers
 ```
 
-## Building Individual Handlers
-
-Build specific Lambda handlers:
-```bash
-# Build GetPlayerStats handler
-./gradlew buildGetPlayerStatsHandler
-
-# Build GetUser handler
-./gradlew buildGetUserHandler
-
-# Build CreateUser handler
-./gradlew buildCreateUserHandler
-
-# Build AddPlayerToUser handler
-./gradlew buildAddPlayerToUserHandler
-```
-
 Each handler will be built into its own JAR file in `build/libs/`.
 
 ## Dependencies

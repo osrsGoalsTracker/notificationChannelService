@@ -23,6 +23,7 @@
 - In the repository layer, we will frequently use partial sort keys to access data efficiently. If you are ever confused about how to easily access data, check the DDB_SCHEMA.md file. If that does not answer your question, stop and ask me to clarify.
 - Follow the following service architecture:
 
+
 ```
 # Layered Architecture Rule Set
 
@@ -45,7 +46,7 @@ Each domain (e.g., `User`, `Character`, `Goal`) has its own service responsible 
 
 2. **Service Layer**
    - Encapsulates business logic for the domain.
-   - Uses repository interfaces to fetch or persist data.
+   - Uses repository interfaces to fetch or persist data. Uses external layer interfaces to communicate with external systems.
    - Only depends on the repository layer or other services via interfaces.
 
 3. **Repository Layer**
@@ -54,35 +55,17 @@ Each domain (e.g., `User`, `Character`, `Goal`) has its own service responsible 
    - Provides methods scoped to the domain (e.g., `findUserById`, `saveGoal`).
    - Does not call the service layer.
 
-#### Common Layer
-
-Contains reusable components across domains:
-
-1. **Shared Models**
-   - Defines domain-agnostic objects (e.g., events like `GoalCreationEvent`) that are shared across services.
-
-2. **Shared Utilities**
-   - Includes helpers for common tasks (e.g., event publishing, validation).
-
-#### Orchestration Layer
-
-Handles AWS-specific orchestration tasks, such as:
-
-- Managing AWS resources (e.g., creating SQS queues, associating them with Lambdas).
-- Publishing or consuming events from the event bus.
-- Coordinating interactions between services.
-
-**Requirements:**
-- Modular design: Each orchestration workflow (e.g., queue creation, event publishing) is a self-contained module.
-- Reuse shared models and utilities to ensure consistency with the domain layer.
-
-#### External Layer
-
-Responsible for managing communication with third-party systems, APIs, or services. This layer:
-
+4. ** External layer**
+- Responsible for managing communication with third-party systems, APIs, or services. This layer:
 - Abstracts details like HTTP request/response formats, authentication, and API endpoints.
 - Provides a clean and reusable interface for external communication.
 - Decouples external systems from domain logic.
+- Calls no other layers.
+
+5. **Common Layer**
+- Contains reusable components across domains:
+- Shared models - Defines domain-agnostic objects (e.g., events like `GoalCreationEvent`) that are shared across services. 
+- Shared utilities - Includes helpers for common tasks (e.g., event publishing, validation).
 
 ---
 
@@ -93,16 +76,16 @@ Responsible for managing communication with third-party systems, APIs, or servic
    - Not allowed to call directly: Repository layer or shared utilities.
 
 2. **Service Layer**
-   - Allowed to call: Repository layer, other services via interfaces, shared utilities.
-   - Not allowed to call directly: Handlers or orchestration modules.
+   - Allowed to call: Repository layer, other services via interfaces, external layer via interfaces, shared utilities.
+   - Not allowed to call directly: Handlers.
 
 3. **Repository Layer**
    - Allowed to call: Data store (e.g., DynamoDB SDK).
    - Not allowed to call: Handlers, service layer, or orchestration modules.
 
-4. **Orchestration Layer**
-   - Allowed to call: Shared models/utilities, service layer interfaces.
-   - Not allowed to call directly: Repository layer.
+4. **External Layer**
+   - Allowed to call: external systems via interfaces.
+   - Not allowed to call directly: Repository layer, handlers, service layer.
 
 ---
 
@@ -132,21 +115,25 @@ src/
 │   │   │   ├── example/
 │   │   │   │   ├── character/
 │   │   │   │   │   ├── handler/
-│   │   │   │   │   │   ├── CharacterHandler.java             # Entry point for API
+│   │   │   │   │   │   ├── CharacterHandler.java
 │   │   │   │   │   ├── service/
-│   │   │   │   │   │   ├── CharacterService.java             # Interface
-│   │   │   │   │   │   ├── CharacterServiceImpl.java         # Business logic
+│   │   │   │   │   │   ├── CharacterService.java
+│   │   │   │   │   │   ├── impl/
+│   │   │   │   │   │   │   ├── CharacterServiceImpl.java
 │   │   │   │   │   ├── repository/
-│   │   │   │   │   │   ├── CharacterRepository.java          # Interface
-│   │   │   │   │   │   ├── CharacterRepositoryImpl.java      # DynamoDB implementation
+│   │   │   │   │   │   ├── CharacterRepository.java
+│   │   │   │   │   │   ├── impl/
+│   │   │   │   │   │   │   ├── CharacterRepositoryImpl.java
 │   │   │   │   │   ├── model/
-│   │   │   │   │   │   ├── Character.java                    # Domain object
-│   │   │   │   │   │   ├── CreateCharacterRequest.java       # API request DTO
-│   │   │   │   │   │   ├── CreateCharacterResponse.java      # API response DTO
+│   │   │   │   │   │   ├── Character.java
+│   │   │   │   │   │   ├── CreateCharacterRequest.java
+│   │   │   │   │   │   ├── CreateCharacterResponse.java
 │   │   │   │   │   ├── di/
-│   │   │   │   │   │   ├── CharacterModule.java              # Guice DI config
-│   │   │   │   │   ├── api/
-│   │   │   │   │   │   ├── GameApiClient.java                # External API client
+│   │   │   │   │   │   ├── CharacterModule.java
+│   │   │   │   │   ├── external/
+│   │   │   │   │   │   ├── GameApiClient.java
+│   │   │   │   │   │   ├── impl/
+│   │   │   │   │   │   │   ├── ExternalGameApiClientImpl.java
 │   │   │   │   │   │   ├── model/
-│   │   │   │   │   │   │   ├── GameCharacterResponse.java    # API response model
+│   │   │   │   │   │   │   ├── GameCharacterResponse.java
 ```
