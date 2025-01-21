@@ -26,6 +26,11 @@ public final class JsonUtils {
      * @throws RuntimeException if there's an error during serialization
      */
     public static String toJson(Object object) {
+        if (object == null) {
+            throw new RuntimeException("Cannot convert null object to JSON",
+                    new JsonProcessingException("Object to serialize is null") {
+                    });
+        }
         try {
             return OBJECT_MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
@@ -43,6 +48,16 @@ public final class JsonUtils {
      * @throws RuntimeException if there's an error during deserialization
      */
     public static <T> T fromJson(String json, Class<T> clazz) {
+        if (json == null) {
+            throw new RuntimeException("Cannot convert null JSON string to object",
+                    new JsonProcessingException("JSON string is null") {
+                    });
+        }
+        if (clazz == null) {
+            throw new RuntimeException("Cannot convert JSON to null class type",
+                    new JsonProcessingException("Target class is null") {
+                    });
+        }
         try {
             return OBJECT_MAPPER.readValue(json, clazz);
         } catch (JsonProcessingException e) {

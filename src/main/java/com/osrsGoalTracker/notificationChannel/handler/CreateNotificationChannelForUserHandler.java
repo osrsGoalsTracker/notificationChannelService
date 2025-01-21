@@ -35,6 +35,25 @@ public class CreateNotificationChannelForUserHandler
     }
 
     /**
+     * Protected constructor for testing purposes.
+     * 
+     * @param service The notification channel service to use.
+     */
+    protected CreateNotificationChannelForUserHandler(NotificationChannelService service) {
+        this.notificationChannelService = service;
+    }
+
+    /**
+     * Protected method to get the notification channel service for testing
+     * purposes.
+     * 
+     * @return The notification channel service.
+     */
+    protected NotificationChannelService getNotificationChannelService() {
+        return notificationChannelService;
+    }
+
+    /**
      * Handles the request to create a notification channel.
      * 
      * @param input   The API Gateway request event.

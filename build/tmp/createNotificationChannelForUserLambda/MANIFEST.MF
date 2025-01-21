@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: com.osrsGoalTracker.notificationChannel.handler.CreateNotifi
- cationChannelForUserHandler
-Description: Handler for creating a notification channel for a user
-

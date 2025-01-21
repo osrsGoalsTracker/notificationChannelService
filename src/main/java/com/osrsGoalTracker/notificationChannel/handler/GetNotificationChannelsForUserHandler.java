@@ -33,9 +33,28 @@ public class GetNotificationChannelsForUserHandler
     }
 
     /**
+     * Protected constructor for testing purposes.
+     *
+     * @param service The notification channel service to use.
+     */
+    protected GetNotificationChannelsForUserHandler(NotificationChannelService service) {
+        this.notificationChannelService = service;
+    }
+
+    /**
+     * Protected method to get the notification channel service for testing
+     * purposes.
+     *
+     * @return The notification channel service.
+     */
+    protected NotificationChannelService getNotificationChannelService() {
+        return notificationChannelService;
+    }
+
+    /**
      * Handles the request to get notification channels for a user.
-     * 
-     * @param input The API Gateway request event.
+     *
+     * @param input   The API Gateway request event.
      * @param context The AWS Lambda context.
      * @return The API Gateway response event.
      */

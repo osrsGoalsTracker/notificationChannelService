@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: com.osrsGoalTracker.notificationChannel.handler.GetNotificat
- ionChannelsForUserHandler
-Description: Handler for retrieving all notification channels for a user
-
