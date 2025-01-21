@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: com.osrsGoalTracker.character.handler.GetCharactersForUserHa
+ ndler
+Description: Handler for retrieving all players associated with a user
+

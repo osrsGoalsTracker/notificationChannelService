@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE import-control PUBLIC
+    "-//Checkstyle//DTD ImportControl Configuration 1.4//EN"
+    "https://checkstyle.org/dtds/import_control_1_4.dtd">
+
+<import-control pkg="com.osrsGoalTracker">
+    <!-- Allow all external dependencies -->
+    <allow pkg="com.google"/>
+    <allow pkg="lombok"/>
+    <allow pkg="org"/>
+    <allow pkg="javax"/>
+    <allow pkg="java"/>
+    <allow pkg="com.amazonaws"/>
+    <allow pkg="software.amazon"/>
+    <allow pkg="com.fasterxml"/>
+    <allow pkg="com.osrsGoalTracker"/>
+    <allow pkg="com.osrshiscores"/>
+
+    <!-- notificationChannel Domain -->
+    <subpackage name="notificationChannel">
+        <!-- Handler Layer -->
+        <subpackage name="handler">
+            <allow pkg="com.osrsGoalTracker.notificationChannel.handler"/>
+            <allow pkg="com.osrsGoalTracker.notificationChannel.service"/>
+            <allow pkg="com.osrsGoalTracker.notificationChannel.model"/>
+            <allow pkg="com.osrsGoalTracker.notificationChannel.di"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.repository"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.external"/>
+        </subpackage>
+
+        <!-- Service Layer -->
+        <subpackage name="service">
+            <allow pkg="com.osrsGoalTracker.notificationChannel.service"/>
+            <allow pkg="com.osrsGoalTracker.notificationChannel.repository"/>
+            <allow pkg="com.osrsGoalTracker.notificationChannel.model"/>
+            <allow pkg="com.osrsGoalTracker.notificationChannel.external"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.handler"/>
+        </subpackage>
+
+        <!-- Repository Layer -->
+        <subpackage name="repository">
+            <allow pkg="com.osrsGoalTracker.notificationChannel.repository"/>
+            <allow pkg="com.osrsGoalTracker.notificationChannel.model"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.handler"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.service"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.external"/>
+        </subpackage>
+
+        <!-- Model Layer -->
+        <subpackage name="model">
+            <allow pkg="com.osrsGoalTracker.notificationChannel.model"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.handler"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.service"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.repository"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.external"/>
+        </subpackage>
+
+        <!-- External Layer -->
+        <subpackage name="external">
+            <allow pkg="com.osrsGoalTracker.notificationChannel.external"/>
+            <allow pkg="com.osrsGoalTracker.notificationChannel.model"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.handler"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.service"/>
+            <disallow pkg="com.osrsGoalTracker.notificationChannel.repository"/>
+        </subpackage>
+
+        <!-- DI Layer -->
+        <subpackage name="di">
+            <allow pkg="com.osrsGoalTracker.notificationChannel"/>
+        </subpackage>
+    </subpackage>
+</import-control> 

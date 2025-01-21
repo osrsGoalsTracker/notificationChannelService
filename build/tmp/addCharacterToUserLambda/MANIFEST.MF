@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: com.osrsGoalTracker.character.handler.AddCharacterToUserHand
+ ler
+Description: Handler for adding a RuneScape player to a user account
+
