@@ -35,6 +35,10 @@ hs_err_pid*
 # Mac OS
 .DS_Store
 
+# Gradle wrapper exceptions
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
 # Maven (legacy - can be removed once migration is complete)
 target/
 pom.xml.tag
