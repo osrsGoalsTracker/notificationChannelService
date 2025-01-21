@@ -371,3 +371,157 @@ Example Event:
     "updatedAt": "2024-01-12T00:00:00Z"
 }
 ``` 
+
+# Notification Channel Service Architecture
+
+## Overview
+
+The Notification Channel Service follows a strict layered architecture pattern with well-defined boundaries and visibility rules. This document outlines the architectural principles, package structure, and visibility rules that govern the service.
+
+## Package Visibility Rules
+
+### Public APIs
+Only the following components are intended for external use:
+
+1. **Lambda Handlers**
+   - `GetNotificationChannelsForUserHandler`
+   - `CreateNotificationChannelForUserHandler`
+   These are the entry points for AWS Lambda functions and are publicly accessible.
+
+2. **Service Interface**
+   - `NotificationChannelService`
+   The service interface is public to allow for integration with other services.
+
+### Internal Components
+All other components are internal implementation details and are not meant for external use:
+
+1. **Repository Layer**
+   - Package-private implementation
+   - Only accessible within the service package
+   - Handles data persistence details
+
+2. **Models**
+   - Internal data structures
+   - Used for data transfer between layers
+   - Not exposed outside the service
+
+3. **Utilities**
+   - Package-private helper classes
+   - Internal implementation details
+   - Not accessible outside their respective packages
+
+## Package Structure
+
+```
+com.osrsGoalTracker.notificationChannel/
+├── handler/                  # Public Lambda handlers
+│   ├── request/             # Internal request models
+│   └── response/            # Internal response models
+├── service/                 # Public service interface
+│   └── impl/               # Package-private implementation
+├── repository/             # Package-private repository interface
+│   └── impl/              # Package-private implementation
+├── model/                  # Internal models
+└── di/                     # Package-private dependency injection
+```
+
+## Layer Responsibilities
+
+### Handler Layer (Public)
+- Entry point for AWS Lambda functions
+- Request/response transformation
+- Error handling and logging
+- Delegates to service layer
+
+### Service Layer (Public Interface, Package-Private Implementation)
+- Business logic implementation
+- Transaction management
+- Input validation
+- Orchestration of repository operations
+
+### Repository Layer (Package-Private)
+- Data persistence operations
+- DynamoDB interactions
+- Data mapping and transformation
+
+### Models (Internal)
+- Data structures for internal use
+- Request/response objects
+- Domain objects
+
+## Dependency Rules
+
+1. Handlers may only depend on:
+   - Service interfaces
+   - Request/response models
+
+2. Services may only depend on:
+   - Repository interfaces
+   - Domain models
+
+3. Repositories may only depend on:
+   - Domain models
+   - Data store SDKs
+
+## Testing Strategy
+
+1. **Public Components**
+   - Handlers and service interfaces must have comprehensive public API tests
+   - Focus on contract testing and integration scenarios
+
+2. **Internal Components**
+   - Package-private components are tested through their public interfaces
+   - Implementation details are verified via internal tests
+
+## Best Practices
+
+1. **Visibility**
+   - Use the minimum required visibility for all components
+   - Make classes package-private by default
+   - Only expose what is absolutely necessary
+
+2. **Dependencies**
+   - Depend on interfaces, not implementations
+   - Use dependency injection for loose coupling
+   - Keep implementation details hidden
+
+3. **Testing**
+   - Test through public interfaces
+   - Use mocks for dependencies
+   - Focus on behavior, not implementation
+
+## Error Handling
+
+1. **Public Layer**
+   - Well-defined error responses
+   - Proper HTTP status codes
+   - Meaningful error messages
+
+2. **Internal Layer**
+   - Detailed logging
+   - Exception translation
+   - Proper error propagation
+
+## Monitoring and Observability
+
+1. **Public Endpoints**
+   - Request/response metrics
+   - Latency tracking
+   - Error rates
+
+2. **Internal Operations**
+   - Detailed logging
+   - Performance metrics
+   - Resource utilization
+
+## Security
+
+1. **Public APIs**
+   - Authentication
+   - Authorization
+   - Input validation
+
+2. **Internal Components**
+   - Secure configuration
+   - Data encryption
+   - Access control 

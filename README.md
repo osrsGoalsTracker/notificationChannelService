@@ -1,28 +1,30 @@
-# OSRS Goals Service
+# Notification Channel Service
 
-A Java service for tracking Old School RuneScape player goals and progress.
+A Java service for managing notification channels for OSRS Goal Tracker users.
 
 ## Overview
 
-This service provides a set of AWS Lambda functions for managing OSRS player goals and tracking progress. It follows a Layered Service Architecture (LSA) pattern and is built with Java 21.
+This service provides AWS Lambda functions for managing notification channels (e.g., Discord, Email) for OSRS Goal Tracker users. It follows a strict layered architecture with well-defined public APIs and internal implementation details.
+
+## Public API
+
+The service exposes two main components:
+
+1. **Lambda Handlers** - AWS Lambda entry points:
+   - `GetNotificationChannelsForUserHandler` - Retrieves notification channels for a user
+   - `CreateNotificationChannelForUserHandler` - Creates a new notification channel for a user
+
+2. **Service Interface**:
+   - `NotificationChannelService` - Interface for notification channel operations
+
+All other components are internal implementation details and not meant for external use. See [Architecture](docs/ARCHITECTURE.md) for details on package visibility rules.
 
 ## Documentation
 
-- [Project Structure and Architecture](docs/ARCHITECTURE.md) - Detailed overview of the project's layered architecture and development guidelines
-- [Handler Interfaces](docs/HANDLERS.md) - Lambda function entry points, inputs, and outputs
-- [Service Interfaces](docs/SERVICES.md) - Service layer interfaces and functionality
-- [Data Models](docs/MODELS.md) - Core data models and their relationships
-
-## Architecture
-
-### Domain Layer
-The service is organized into domain-specific modules (e.g., User, Character, Goal) that handle core business logic.
-
-### Orchestration Layer
-The orchestration layer manages cross-domain interactions through events. It includes:
-- Event models (e.g., GoalCreationEvent)
-- Event handlers
-- Event-driven workflows
+- [Architecture](docs/ARCHITECTURE.md) - Detailed architecture, package visibility rules, and best practices
+- [Handlers](docs/HANDLERS.md) - Lambda function specifications and usage
+- [Services](docs/SERVICES.md) - Service interface documentation
+- [Models](docs/MODELS.md) - Data model documentation
 
 ## Requirements
 
@@ -41,7 +43,7 @@ The orchestration layer manages cross-domain interactions through events. It inc
 ./gradlew test
 ```
 
-3. Build all Lambda handlers:
+3. Build Lambda handlers:
 ```bash
 ./gradlew buildAllHandlers
 ```
@@ -66,4 +68,21 @@ The service is deployed using AWS CDK with the following components:
 
 - API Gateway for REST endpoints
 - Lambda functions for business logic
-- DynamoDB tables for data storage 
+- DynamoDB tables for data storage
+
+## Best Practices
+
+1. **Package Visibility**
+   - Only use public APIs (handlers and service interface)
+   - Do not depend on internal implementation details
+   - Treat all other components as implementation details
+
+2. **Error Handling**
+   - Handle errors through the public API
+   - Use proper HTTP status codes
+   - Provide meaningful error messages
+
+3. **Testing**
+   - Test through public interfaces
+   - Do not test internal implementation details
+   - Use mocks for external dependencies 
